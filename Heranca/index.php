@@ -18,13 +18,17 @@
 
         protected bool $emMovimento = false;
 
+        private ?string $tipoCombustivel = null;
+
         public function __construct()
         {
             $this->hasMotor = $this->tracao === 'automotor';
         }
 
-        public function movimentar(): self
+        public function movimentar(string $combustivel): self
         {
+            $this->setCombustivel($combustivel);
+
             $this->emMovimento = true;
 
             return $this;
@@ -36,6 +40,16 @@
 
             return $this;
         }
+
+        public function emMovimento(): bool
+        {
+            return $this->emMovimento;
+        }
+
+        private function setCombustivel(string $combustivel): void
+        {
+            $this->tipoCombustivel = $combustivel;
+        }
     }
 
     class Carro extends Veiculo
@@ -44,11 +58,11 @@
 
         protected bool $rodasAlinhadas = false;
 
-        public function movimentar(): self
+        public function movimentar(string $combustivel): self
         {
             $this->rodasAlinhadas = true;
 
-            parent::movimentar();
+            parent::movimentar($combustivel);
 
             return $this;
         }
@@ -77,8 +91,17 @@
         <h2>Acessando Atributos e Métodos públicos</h2>
         <?php
         // Chamando atributos públicos
-        $carro->movimentar();
+        $carro->movimentar('gasolina');
         var_dump($carro);
+        ?>
+    </div>
+
+    <div style="margin-top: 50px;">
+        <h2>Métodos privados</h2>
+        <?php
+        $carro2 = new Carro();
+        $carro2->movimentar('alcool');
+        var_dump($carro2);
         ?>
     </div>
 </body>
