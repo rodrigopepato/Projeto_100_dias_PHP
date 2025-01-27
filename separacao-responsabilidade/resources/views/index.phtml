@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <?php include __DIR__ . '/include/head.phtml' ?>
+</head>
+<body>
+    <h1>Products available</h1>
+    <ul>
+        <?php foreach ($filteredProducts as $product): ?>
+            <li>
+                <strong><?= $product['name'] ?></strong>
+                <span><?= $product['price'] ?></span>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+</body>
+</html>
