@@ -1,9 +1,22 @@
 <?php
 
+use Pdo\Domain\Model\Student;
+use Pdo\Infrastructure\Persistence\ConnectionCreator;
+
 require_once 'vendor/autoload.php';
 
-$databasePath = __DIR__ . '/banco.sqlite';
-$pdo = new PDO('sqlite:' . $databasePath);
+$pdo = ConnectionCreator::createConnection();
 
-$statment = $pdo->query('SELECT * FROM students;');
-var_dump($statment->fetchAll());
+$statement = $pdo->query('SELECT * FROM students;');
+$studentDataList = $statement->fetchAll(PDO::FETCH_ASSOC);
+$studentList = [];
+
+foreach ($studentDataList as $studentData) {
+    $studentList[] = new Student(
+        $studentData['id'],
+        $studentData['name'],
+        new \DateTimeImmutable($studentData['birth_date'])
+    );
+}
+
+var_dump($studentList);
