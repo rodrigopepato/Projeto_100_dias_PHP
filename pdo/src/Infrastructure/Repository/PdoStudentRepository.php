@@ -1,17 +1,18 @@
 <?php
 
+namespace Pdo\Infrastructure\Repository;
+
 use PDO;
 use Pdo\Domain\Model\Student;
 use Pdo\Domain\Repository\StudentRepository;
-use Pdo\Infrastructure\Persistence\ConnectionCreator;
 
 class PdoStudentRepository implements StudentRepository
 {
     private PDO $connection;
 
-    public function __construct()
+    public function __construct(PDO $connection)
     {
-        $this->connection = ConnectionCreator::createConnection();
+        $this->connection = $connection;
     }
 
     public function allStudents(): array
