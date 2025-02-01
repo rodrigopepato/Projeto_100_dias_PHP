@@ -3,6 +3,7 @@
 namespace Pdo\Infrastructure\Repository;
 
 use PDO;
+use Pdo\Domain\Model\Phone;
 use Pdo\Domain\Model\Student;
 use Pdo\Domain\Repository\StudentRepository;
 
@@ -27,7 +28,7 @@ class PdoStudentRepository implements StudentRepository
     {
         $sqlQuery = 'SELECT * FROM students WHERE birth_date = ?;';
         $stmt = $this->connection->prepare($sqlQuery);
-        $stmt->bindValue(1, $birthDate->format('Y-d-m'));
+        $stmt->bindValue(1, $birthDate->format('Y-m-d'));
         $stmt->execute();
 
         return $this->hydrateStudentList($stmt);
@@ -39,14 +40,37 @@ class PdoStudentRepository implements StudentRepository
         $studentList = [];
 
         foreach ($studentDataList as $studentData) {
-            $studentList[] = new Student(
+            $student = new Student(
             $studentData['id'],
             $studentData['name'],
             new \DateTimeImmutable($studentData['birth_date'])
             );
+
+            $this->fillPhonesOf($student);
+
+            $studentList[] = $student;
         }
 
         return $studentList;
+    }
+
+    private function fillPhonesOf(Student $student): void
+    {
+        $sqlQuery = 'SELECT id, area_code, number FROM phone WHERE student_id = ?';
+        $stmt = $this->connection->prepare($sqlQuery);
+        $stmt->bindValue(1, $student->id(), PDO::PARAM_INT);
+        $stmt->execute();
+
+        $phoneDataList = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach($phoneDataList as $phoneData) {
+            $phone = new Phone(
+                $phoneData['id'],
+                $phoneData['area_code'],
+                $phoneData['number']
+            );
+
+            $student->addPhone($phone);
+        }
     }
 
     public function save(Student $student): bool
