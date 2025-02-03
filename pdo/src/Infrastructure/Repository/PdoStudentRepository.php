@@ -42,7 +42,7 @@ class PdoStudentRepository implements StudentRepository
         foreach ($studentDataList as $studentData) {
             $studentList[]  = new Student(
             $studentData['id'],
-            $studentData['name'],
+            $studentData['NAME'],
             new \DateTimeImmutable($studentData['birth_date'])
             );
 
@@ -110,16 +110,16 @@ class PdoStudentRepository implements StudentRepository
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $studentList = [];
 
-        foreach ($result as $row) {
-            if (!array_key_exists($row['id'], $studentList)) {
-                $studentList[$row['id']] = new Student(
-                    $row['id'],
-                    $row['name'],
-                    new \DateTimeImmutable($row['birth_date'])
+        foreach ($result as $studentData) {
+            if (!array_key_exists($studentData['id'], $studentList)) {
+                $studentList[$studentData['id']] = new Student(
+                    $studentData['id'],
+                    $studentData['name'],
+                    new \DateTimeImmutable($studentData['birth_date'])
                 );
             }
-            $phone = new Phone($row['phone_id'], $row['area_code'], $row['number']);
-            $studentList[$row['id']]->addPhone($phone);
+            $phone = new Phone($studentData['phone_id'], $studentData['area_code'], $studentData['number']);
+            $studentList[$studentData['id']]->addPhone($phone);
         }
 
         return $studentList;

@@ -12,6 +12,6 @@ class Phone
 
     public function formattedPhone(): string
     {
-        return "($this->areaCode) $this->number";
+        return "({$this->areaCode}) {$this->number}";
     }
 }
