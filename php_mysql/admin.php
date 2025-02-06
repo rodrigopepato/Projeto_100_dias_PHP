@@ -1,3 +1,13 @@
+<?php
+
+    require __DIR__ . '/src/conexao-bd.php';
+    require __DIR__ . '/src/Model/Produto.php';
+    require __DIR__ . '/src/Repositorio/ProdutoRepositorio.php';
+
+    $produtosRepositorio = new ProdutoRepositorio($pdo);
+    $produtos = $produtosRepositorio->buscarTodos();
+
+?>
 <!doctype html>
 <html lang="pt-br">
 <head>
@@ -36,43 +46,21 @@
         </tr>
       </thead>
       <tbody>
-      <tr>
-        <td>Bife</td>
-        <td>Almoço</td>
-        <td>Delicioso prato</td>
-        <td>R$ 25.00</td>
-        <td><a class="botao-editar" href="editar-produto.html">Editar</a></td>
-        <td>
-          <form>
-            <input type="button" class="botao-excluir" value="Excluir">
-          </form>
-        </td>
-        
-      </tr>
-      <tr>
-        <td>Frango</td>
-        <td>Almoço</td>
-        <td>Delicioso prato</td>
-        <td>R$ 25.00</td>
-        <td><a class="botao-editar" href="editar-produto.html">Editar</a></td>
-        <td>
-          <form>
-            <input type="button" class="botao-excluir" value="Excluir">
-          </form>
-        </td>
-      </tr>
-      <tr>
-        <td>Café Gelado</td>
-        <td>Café</td>
-        <td>Delicioso prato</td>
-        <td>R$ 25.00</td>
-        <td><a class="botao-editar" href="editar-produto.html">Editar</a></td>
-        <td>
-          <form>
-            <input type="button" class="botao-excluir" value="Excluir">
-          </form>
-        </td>
-      </tr>
+        <?php foreach ($produtos as $produto): ?>
+          <tr>
+            <td><?= $produto->nome() ?></td>
+            <td><?= $produto->tipo() ?></td>
+            <td><?= $produto->descricao() ?></td>
+            <td><?= $produto->precoFormatado() ?></td>
+            <td><a class="botao-editar" href="editar-produto.html">Editar</a></td>
+            <td>
+              <form action="excluir-produto.php" method="POST">
+                <input type="hidden" name="id" value="<?= $produto->id() ?>">
+                <input type="submit" class="botao-excluir" value="Excluir">
+              </form>
+            </td>
+          </tr>
+        <?php endforeach; ?>
       </tbody>
     </table>
   <a class="botao-cadastrar" href="cadastrar-produto.html">Cadastrar produto</a>

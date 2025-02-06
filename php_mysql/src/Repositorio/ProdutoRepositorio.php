@@ -7,12 +7,14 @@ class ProdutoRepositorio
 
     private function formarObjeto($dados)
     {
-        return new Produto($dados['id'],
+        return new Produto(
+            $dados['id'],
             $dados['tipo'],
             $dados['nome'],
             $dados['descricao'],
             $dados['imagem'],
-            $dados['preco']);
+            $dados['preco']
+        );
     }
     public function opcoesCafe(): array
     {
@@ -37,6 +39,28 @@ class ProdutoRepositorio
         },$produtosAlmoco);
 
         return  $dadosAlmoco;
+    }
+
+    public function buscarTodos(): array
+    {
+        $sql = "SELECT * FROM produtos ORDER BY preco";
+        $statement = $this->pdo->query($sql);
+        $dados = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+        $todosOsDados = array_map(function ($produto){
+            return $this->formarObjeto($produto);
+        },$dados);
+
+        return $todosOsDados;
+    }
+
+    public function deletar(int $id): bool
+    {
+        $sql = 'DELETE FROM produtos where id = :id';
+        $statement = $this->pdo->prepare($sql);
+        $statement->bindParam(':id', $id, PDO::PARAM_INT);
+
+        return $statement->execute();
     }
 
 }

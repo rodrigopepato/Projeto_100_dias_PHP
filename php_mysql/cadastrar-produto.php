@@ -1,3 +1,19 @@
+<?php
+
+    require __DIR__ . '/src/conexao-bd.php';
+    require __DIR__ . '/src/Model/Produto.php';
+    require __DIR__ . '/src/Repositorio/ProdutoRepositorio.php';
+
+    $produto = new Produto(
+        null,
+        $_POST['tipo'],
+        $_POST['nome'],
+        $_POST['descricao'],
+        $_POST['imagem'],
+        $_POST['preco'],
+    );
+
+?>
 <!doctype html>
 <html lang="pt-br">
 <head>
@@ -49,7 +65,7 @@
 
             <input type="submit" name="cadastro" class="botao-cadastrar" value="Cadastrar produto"/>
         </form>
-    
+
     </section>
 </main>
 

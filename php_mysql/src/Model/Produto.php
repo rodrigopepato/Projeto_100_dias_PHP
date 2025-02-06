@@ -3,7 +3,7 @@
 class Produto {
 
     public function __construct(
-        private int $id,
+        private ?int $id,
         private string $tipo,
         private string $nome,
         private string $descricao,
