@@ -7,8 +7,8 @@ class Produto {
         private string $tipo,
         private string $nome,
         private string $descricao,
-        private string $imagem,
-        private float $preco
+        private float $preco,
+        private string $imagem = 'logo-serenatto.png'
     ) {}
 
     public function id(): int

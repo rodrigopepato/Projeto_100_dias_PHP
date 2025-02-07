@@ -4,14 +4,20 @@
     require __DIR__ . '/src/Model/Produto.php';
     require __DIR__ . '/src/Repositorio/ProdutoRepositorio.php';
 
-    $produto = new Produto(
-        null,
-        $_POST['tipo'],
-        $_POST['nome'],
-        $_POST['descricao'],
-        $_POST['imagem'],
-        $_POST['preco'],
-    );
+    if(isset($_POST['cadastro'])){
+        $produto = new Produto(
+            null,
+            $_POST['tipo'],
+            $_POST['nome'],
+            $_POST['descricao'],
+            $_POST['preco'],
+        );
+
+        $produtosRepositorio = new ProdutoRepositorio($pdo);
+        $produtosRepositorio->salvar($produto);
+
+        header("Location: admin.php");
+    }
 
 ?>
 <!doctype html>
@@ -40,7 +46,7 @@
         <img class= "ornaments" src="img/ornaments-coffee.png" alt="ornaments">
     </section>
     <section class="container-form">
-        <form action="#">
+        <form method="POST">
 
             <label for="nome">Nome</label>
             <input type="text" id="nome" name="nome" placeholder="Digite o nome do produto" required>

@@ -12,8 +12,8 @@ class ProdutoRepositorio
             $dados['tipo'],
             $dados['nome'],
             $dados['descricao'],
-            $dados['imagem'],
-            $dados['preco']
+            $dados['preco'],
+            $dados['imagem']
         );
     }
     public function opcoesCafe(): array
@@ -59,6 +59,20 @@ class ProdutoRepositorio
         $sql = 'DELETE FROM produtos where id = :id';
         $statement = $this->pdo->prepare($sql);
         $statement->bindParam(':id', $id, PDO::PARAM_INT);
+
+        return $statement->execute();
+    }
+
+    public function salvar(Produto $produto):bool
+    {
+        $sqlInsert = 'INSERT INTO produtos (tipo, nome, descricao, preco, imagem) VALUES (:tipo, :nome, :descricao, :preco, :imagem)';
+        $statement = $this->pdo->prepare($sqlInsert);
+
+        $statement->bindValue(':tipo', $produto->tipo());
+        $statement->bindValue(':nome', $produto->nome());
+        $statement->bindValue(':descricao', $produto->descricao());
+        $statement->bindValue(':preco', $produto->preco());
+        $statement->bindValue(':imagem', $produto->imagem());
 
         return $statement->execute();
     }
