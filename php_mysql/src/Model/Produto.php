@@ -43,7 +43,7 @@ class Produto {
 
     public function precoFormatado(): string
     {
-        return 'R$ ' . number_format($this->preco(), 2);
+        return number_format($this->preco(), 2);
     }
 
     public function caminhoImagem(): string
