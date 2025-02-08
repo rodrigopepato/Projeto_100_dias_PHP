@@ -52,7 +52,7 @@
             <td><?= $produto->tipo() ?></td>
             <td><?= $produto->descricao() ?></td>
             <td><?= $produto->precoFormatado() ?></td>
-            <td><a class="botao-editar" href="editar-produto.html">Editar</a></td>
+            <td><a class="botao-editar" href="editar-produto.php?id=<?= $produto->id() ?>">Editar</a></td>
             <td>
               <form action="excluir-produto.php" method="POST">
                 <input type="hidden" name="id" value="<?= $produto->id() ?>">

@@ -1,3 +1,13 @@
+<?php
+
+    require __DIR__ . '/src/conexao-bd.php';
+    require __DIR__ . '/src/Model/Produto.php';
+    require __DIR__ . '/src/Repositorio/ProdutoRepositorio.php';
+
+    $produtosRepositorio = new ProdutoRepositorio($pdo);
+    $produto = $produtosRepositorio->buscarProduto($_GET['id']);
+
+?>
 <!doctype html>
 <html lang="pt-br">
 <head>
@@ -27,24 +37,24 @@
     <form action="#">
 
       <label for="nome">Nome</label>
-      <input type="text" id="nome" name="nome" placeholder="Digite o nome do produto" required>
+      <input type="text" id="nome" name="nome" placeholder="Digite o nome do produto" value="<?= $produto->nome() ?>" required>
 
       <div class="container-radio">
         <div>
             <label for="cafe">Café</label>
-            <input type="radio" id="cafe" name="tipo" value="Café" checked>
+            <input type="radio" id="cafe" name="tipo" value="Café" <?= $produto->tipo() == 'Café' ? 'checked' : '' ?> >
         </div>
         <div>
             <label for="almoco">Almoço</label>
-            <input type="radio" id="almoco" name="tipo" value="Almoço">
+            <input type="radio" id="almoco" name="tipo" value="Almoço" <?= $produto->tipo() == 'Almoço' ? 'checked' : '' ?>>
         </div>
     </div>
 
       <label for="descricao">Descrição</label>
-      <input type="text" id="descricao" name="descricao" placeholder="Digite uma descrição" required>
+      <input type="text" id="descricao" name="descricao" value="<?= $produto->descricao() ?>" placeholder="Digite uma descrição" required>
 
       <label for="preco">Preço</label>
-      <input type="text" id="preco" name="preco" placeholder="Digite uma descrição" required>
+      <input type="text" id="preco" name="preco" placeholder="Digite uma descrição" value="<?= $produto->precoFormatado() ?>" required>
 
       <label for="imagem">Envie uma imagem do produto</label>
       <input type="file" name="imagem" accept="image/*" id="imagem" placeholder="Envie uma imagem">

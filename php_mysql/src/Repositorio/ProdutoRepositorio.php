@@ -5,7 +5,7 @@ class ProdutoRepositorio
 
     public function __construct(private PDO $pdo) {}
 
-    private function formarObjeto($dados)
+    private function formarObjeto($dados): Produto
     {
         return new Produto(
             $dados['id'],
@@ -52,6 +52,17 @@ class ProdutoRepositorio
         },$dados);
 
         return $todosOsDados;
+    }
+
+    public function buscarProduto(int $id)
+    {
+        $sql = 'SELECT * FROM produtos where id = :id';
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $dados = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $this->formarObjeto($dados);
     }
 
     public function deletar(int $id): bool
