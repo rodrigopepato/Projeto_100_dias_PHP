@@ -41,6 +41,11 @@ class Produto {
         return $this->preco;
     }
 
+    public function setImagem(string $imagem): void
+    {
+        $this->imagem = $imagem;
+    }
+
     public function precoFormatado(): string
     {
         return number_format($this->preco(), 2);

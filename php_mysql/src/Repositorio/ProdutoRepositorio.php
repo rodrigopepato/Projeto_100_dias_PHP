@@ -88,22 +88,30 @@ class ProdutoRepositorio
         return $statement->execute();
     }
 
-    public function atualizar(Produto $produto):bool
+    public function atualizar(Produto $produto)
     {
-        $sqlUpdate = 'UPDATE produtos
-        SET tipo = :tipo, nome = :nome, descricao = :descricao, preco = :preco, imagem = :imagem
-        WHERE id = :id';
+        $sql = "UPDATE produtos SET tipo = ?, nome = ?, descricao = ?, preco = ? WHERE id = ?";
+        $statement = $this->pdo->prepare($sql);
+        $statement->bindValue(1, $produto->tipo());
+        $statement->bindValue(2, $produto->nome());
+        $statement->bindValue(3, $produto->descricao());
+        $statement->bindValue(4,$produto->preco());
+        $statement->bindValue(5, $produto->id());
+        $statement->execute();
 
-        $statement = $this->pdo->prepare($sqlUpdate);
+        if($produto->imagem() !== 'logo-serenatto.png'){
 
-        $statement->bindValue(':tipo', $produto->tipo());
-        $statement->bindValue(':nome', $produto->nome());
-        $statement->bindValue(':descricao', $produto->descricao());
-        $statement->bindValue(':preco', $produto->preco());
+            $this->atualizarFoto($produto);
+        }
+    }
+
+    private function atualizarFoto(Produto $produto): void
+    {
+        $sql = "UPDATE produtos SET imagem = :imagem WHERE id = :id";
+        $statement = $this->pdo->prepare($sql);
         $statement->bindValue(':imagem', $produto->imagem());
-        $statement->bindValue(':id', $produto->id(), PDO::PARAM_INT);
-
-        return $statement->execute();
+        $statement->bindValue(':id', $produto->id());
+        $statement->execute();
     }
 
 }

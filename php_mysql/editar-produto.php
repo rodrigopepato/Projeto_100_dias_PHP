@@ -5,22 +5,28 @@
     require __DIR__ . '/src/Repositorio/ProdutoRepositorio.php';
 
     $produtosRepositorio = new ProdutoRepositorio($pdo);
-    $produto = $produtosRepositorio->buscarProduto($_GET['id']);
 
-    if(isset($_POST['editar'])){
-      $produto = new Produto(
+      if(isset($_POST['editar'])){
+        $produto = new Produto(
           $_POST['id'],
           $_POST['tipo'],
           $_POST['nome'],
           $_POST['descricao'],
           $_POST['preco']
+        );
 
-      );
+        if ($_FILES['imagem']['error'] == UPLOAD_ERR_OK) {
+          $produto->setImagem(uniqid().$_FILES['imagem']['name']);
+          move_uploaded_file($_FILES['imagem']['tmp_name'], $produto->caminhoImagem());
+        }
 
-      $produtosRepositorio->atualizar($produto);
+        $produtosRepositorio->atualizar($produto);
 
-      header("Location: admin.php");
-  }
+        header("Location: admin.php");
+      }
+      else {
+        $produto = $produtosRepositorio->buscarProduto($_GET['id']);
+      }
 
 ?>
 <!doctype html>
@@ -49,7 +55,7 @@
     <img class= "ornaments" src="img/ornaments-coffee.png" alt="ornaments">
   </section>
   <section class="container-form">
-    <form action="" method="POST">
+    <form action="" method="POST" enctype="multipart/form-data">
 
       <label for="nome">Nome</label>
       <input type="text" id="nome" name="nome" placeholder="Digite o nome do produto" value="<?= $produto->nome() ?>" required>
