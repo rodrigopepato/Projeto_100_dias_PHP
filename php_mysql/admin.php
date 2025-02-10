@@ -6,8 +6,8 @@
 
     $produtosRepositorio = new ProdutoRepositorio($pdo);
     $produtos = $produtosRepositorio->buscarTodos();
-
 ?>
+
 <!doctype html>
 <html lang="pt-br">
 <head>
