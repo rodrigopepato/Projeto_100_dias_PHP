@@ -6,21 +6,25 @@ use InvalidArgumentException;
 
 class Video
 {
-    public readonly string $url;
+
+    private int $id;
 
     public function __construct(
-        string $url,
+        public readonly string $url,
         public readonly string $title
     ) {
-        $this->setUrl($url);
+        if (!filter_var($url, FILTER_VALIDATE_URL)) {
+            throw new InvalidArgumentException("URL inválida: $url");
+        }
     }
 
-    public function setUrl(string $url): void
+    public function id(): int
     {
-        if (filter_var($url, FILTER_VALIDATE_URL) === false) {
-            throw new InvalidArgumentException;
-        }
+        return $this->id;
+    }
 
-        $this->url = $url;
+    public function setId(int $id): void
+    {
+        $this->id = $id;
     }
 }
