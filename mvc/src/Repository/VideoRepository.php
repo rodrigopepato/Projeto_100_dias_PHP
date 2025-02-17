@@ -12,7 +12,7 @@ class VideoRepository
     {
     }
 
-    public function add(Video $video): void
+    public function add(Video $video): bool
     {
         $sql = 'INSERT INTO videos (url, title) VALUES (?, ?);';
         $statement = $this->pdo->prepare($sql);
@@ -20,13 +20,18 @@ class VideoRepository
         $statement->bindValue(2, $video->title);
 
         try {
-            $statement->execute();
-            $id = $this->pdo->lastInsertId();
+            $success = $statement->execute();
 
-            $video->setId(intval($id));
+            if ($success) {
+                $id = $this->pdo->lastInsertId();
+                $video->setId(intval($id));
+            }
+
+            return $success;
 
         } catch (PDOException $e) {
             echo "Erro ao inserir vídeo: " . $e->getMessage();
+            return false;
         }
     }
 
@@ -58,12 +63,26 @@ class VideoRepository
                     ->fetchAll(PDO::FETCH_ASSOC);
 
         return array_map(
-            function (array $videoData) {
-                $video = new Video($videoData['url'], $videoData['title']);
-                $video->setId($videoData['id']);
-
-                return $video;
-        },
-        $videoList);
+                $this->hydrateVideo(...),
+                $videoList
+        );
     }
+
+    public function find(int $id): Video
+    {
+        $statement = $this->pdo->prepare('SELECT * FROM videos WHERE id = ?;');
+        $statement->bindValue(1, $id, PDO::PARAM_INT);
+        $statement->execute();
+
+        return $this->hydrateVideo($statement->fetch(PDO::FETCH_ASSOC));
+    }
+
+    public function hydrateVideo(array $videoData): Video
+    {
+        $video = new Video($videoData['url'], $videoData['title']);
+        $video->setId($videoData['id']);
+
+        return $video;
+    }
+
 }

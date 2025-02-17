@@ -1,12 +1,4 @@
-<?php
 
-use Alura\Mvc\Repository\VideoRepository;
-    $dbPath = __DIR__ . '/banco.sqlite';
-    $pdo = new PDO("sqlite:{$dbPath}");
-
-    $repository = new VideoRepository($pdo);
-    $videoList = $repository->all();
-?>
 <?php require_once 'inicio-html.php' ?>
 
     <ul class="videos__container" alt="videos alura">
