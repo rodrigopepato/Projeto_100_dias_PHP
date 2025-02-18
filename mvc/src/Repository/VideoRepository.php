@@ -73,8 +73,9 @@ class VideoRepository
         $statement = $this->pdo->prepare('SELECT * FROM videos WHERE id = ?;');
         $statement->bindValue(1, $id, PDO::PARAM_INT);
         $statement->execute();
+        $videoData = $statement->fetch(PDO::FETCH_ASSOC);
 
-        return $this->hydrateVideo($statement->fetch(PDO::FETCH_ASSOC));
+        return $this->hydrateVideo($videoData);
     }
 
     public function hydrateVideo(array $videoData): Video

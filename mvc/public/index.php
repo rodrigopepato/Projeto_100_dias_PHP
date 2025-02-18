@@ -2,11 +2,13 @@
 
 use Alura\Mvc\Repository\VideoRepository;
 use Alura\Mvc\Controller\{
+    Controller,
     DeleteVideoController,
     EditVideoController,
     NewVideoController,
     VideoListController,
-    VideoFormController};
+    VideoFormController,
+    Error404Controller};
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -31,9 +33,8 @@ if (!array_key_exists('PATH_INFO', $_SERVER) || $_SERVER['PATH_INFO'] === '/') {
 } elseif ($_SERVER['PATH_INFO'] === '/remover-video') {
     $controller = new DeleteVideoController($videoRepository);
 } else {
-    http_response_code(404);
-    echo "<h1>Erro 404 - Página não encontrada</h1>";
-    echo "<p>A página que você procura não existe.</p>";
+    $controler = new Error404Controller();
 }
 
+/** @var Controller $controler*/
 $controller->processaRequisicao();
