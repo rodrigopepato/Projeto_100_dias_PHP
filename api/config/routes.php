@@ -6,6 +6,7 @@ use Alura\Mvc\Controller\{
     NewVideoController,
     VideoFormController,
     VideoListController,
+    LoginUserController,
     };
 
 return [
@@ -15,4 +16,5 @@ return [
     'GET|/editar-video' => VideoFormController::class,
     'POST|/editar-video' => EditVideoController::class,
     'GET|/remover-video' => DeleteVideoController::class,
+    'GET|/login' => LoginUserController::class,
 ];
