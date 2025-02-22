@@ -8,6 +8,8 @@ use Alura\Mvc\Controller\{
     LoginFormController
 };
 
+session_start();
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 $dbPath = __DIR__ . '/../banco.sqlite';
@@ -21,11 +23,11 @@ $routes = require_once __DIR__ . '/../config/routes.php';
 $pathInfo = $_SERVER['PATH_INFO'] ?? '/';
 $httpMethod = $_SERVER['REQUEST_METHOD'];
 
-session_start();
 $isLoginRoute = $pathInfo === '/login';
-if (!array_key_exists('logado', $_SESSION) && !$isLoginRoute) {
+
+if (!isset($_SESSION['logado']) && !$isLoginRoute) {
     header('Location: /login');
-    return;
+    exit();
 }
 
 $key = "$httpMethod|$pathInfo";

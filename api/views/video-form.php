@@ -8,7 +8,7 @@ use Alura\Mvc\Entity\Video;
 
 <main class="container">
     <form class="container__formulario"
-        method="POST">
+        method="POST" enctype="multipart/form-data">
         <h2 class="formulario__titulo">Envie um vídeo!</h2>
             <div class="formulario__campo">
                 <label class="campo__etiqueta" for="url">Link embed</label>
@@ -21,7 +21,6 @@ use Alura\Mvc\Entity\Video;
                     />
             </div>
 
-
             <div class="formulario__campo">
                 <label class="campo__etiqueta" for="titulo">Titulo do vídeo</label>
                 <input name="titulo"
@@ -30,6 +29,16 @@ use Alura\Mvc\Entity\Video;
                     required
                     placeholder="Neste campo, dê o nome do vídeo"
                     id='titulo'
+                    />
+            </div>
+
+            <div class="formulario__campo">
+                <label class="campo__etiqueta" for="image">Imagem do vídeo</label>
+                <input name="image"
+                    accept="image/*"
+                    type="file"
+                    class="campo__escrita"
+                    id='image'
                     />
             </div>
 
