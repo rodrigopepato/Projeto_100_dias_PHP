@@ -7,7 +7,6 @@ use Alura\Mvc\Entity\User;
 
 class UserRepository
 {
-
     public function __construct(private PDO $pdo)
     {
     }
@@ -16,8 +15,7 @@ class UserRepository
     {
         $sql = 'SELECT * FROM users WHERE email = ?;';
         $statement = $this->pdo->prepare($sql);
-        $statement->bindValue(1, $email);
-        $statement->execute();
+        $statement->execute([$email]);
         $userData = $statement->fetch(PDO::FETCH_ASSOC);
 
         if (!$userData) {
@@ -27,9 +25,8 @@ class UserRepository
         return $this->hydrateUser($userData);
     }
 
-    public function hydrateUser(array $userData): User
+    private function hydrateUser(array $userData): User
     {
-
         $user = new User($userData['email'], $userData['password']);
 
         if (isset($userData['id'])) {
@@ -37,5 +34,16 @@ class UserRepository
         }
 
         return $user;
+    }
+
+    public function updatePassword(int $userId, string $newPassword): void
+    {
+        $hashedPassword = password_hash($newPassword, PASSWORD_ARGON2ID);
+        $sql = 'UPDATE users SET password = ? WHERE id = ?';
+        $statement = $this->pdo->prepare($sql);
+        $statement->bindValue(1, $$hashedPassword);
+        $statement->bindValue(2, $userId, PDO::PARAM_INT);
+        $statement->execute();
+
     }
 }
