@@ -10,6 +10,13 @@ use Alura\Mvc\Controller\{
 
 session_start();
 
+if (!isset($_SESSION['last_regeneration'])) {
+    $_SESSION['last_regeneration'] = time();
+} elseif (time() - $_SESSION['last_regeneration'] > 600) {
+    session_regenerate_id(true);
+    $_SESSION['last_regeneration'] = time();
+}
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 $dbPath = __DIR__ . '/../banco.sqlite';
@@ -28,6 +35,10 @@ $isLoginRoute = $pathInfo === '/login';
 if (!isset($_SESSION['logado']) && !$isLoginRoute) {
     header('Location: /login');
     exit();
+}
+
+if ($isLoginRoute && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    session_regenerate_id(true);
 }
 
 $key = "$httpMethod|$pathInfo";
