@@ -47,7 +47,7 @@ class VideoRepository
 
     public function update(Video $video): bool
     {
-        $uploadImageSql = '';
+        $updateImageSql = '';
         if ($video->filePath() !== null) {
             $updateImageSql = ', imagem_path = :imagem_path';
         }
@@ -71,7 +71,7 @@ class VideoRepository
         return $statement->execute();
     }
 
-    /** @return Video */
+    /** @return Video[] */
     public function all(): array
     {
         $videoList = $this->pdo
@@ -93,8 +93,6 @@ class VideoRepository
 
         return $this->hydrateVideo($videoData);
     }
-
-
 
     public function hydrateVideo(array $videoData): Video
     {

@@ -41,7 +41,7 @@ class UserRepository
         $hashedPassword = password_hash($newPassword, PASSWORD_ARGON2ID);
         $sql = 'UPDATE users SET password = ? WHERE id = ?';
         $statement = $this->pdo->prepare($sql);
-        $statement->bindValue(1, $$hashedPassword);
+        $statement->bindValue(1, $hashedPassword);
         $statement->bindValue(2, $userId, PDO::PARAM_INT);
         $statement->execute();
 
