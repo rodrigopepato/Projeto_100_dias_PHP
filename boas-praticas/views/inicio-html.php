@@ -17,7 +17,6 @@
 <body>
 
 <header>
-
     <nav class="cabecalho">
         <a class="logo" href="./"></a>
 
@@ -26,5 +25,6 @@
             <a href="/logout" class="cabecalho__sair">Sair</a>
         </div>
     </nav>
-
 </header>
+
+<h2 class="formulario__titulo erro">Erro</h2>

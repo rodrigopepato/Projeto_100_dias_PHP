@@ -10,6 +10,6 @@ class LoginFormController extends ControllerWithHtml implements Controller
             header('Location: /');
             return;
         }
-        $this->renderTemplate('login-form');
+        echo $this->renderTemplate('login-form');
     }
 }
