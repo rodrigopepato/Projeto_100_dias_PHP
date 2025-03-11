@@ -2,31 +2,41 @@
 
 namespace Alura\Mvc\Controller;
 
+use Alura\Mvc\Helper\FlashMessageTrait;
 use finfo;
 use Alura\Mvc\Entity\Video;
 use Alura\Mvc\Repository\VideoRepository;
+use Nyholm\Psr7\Response;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class EditVideoController implements Controller
 {
+    use FlashMessageTrait;
     public function __construct(private VideoRepository $videoRepository)
     {
     }
 
-    public function processaRequisicao(): void
+    public function processaRequisicao(ServerRequestInterface $request): ResponseInterface
     {
-        $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+        $queryParams = $request->getQueryParams();
+        $id = filter_var($queryParams['id'], FILTER_VALIDATE_INT);
 
         if ($id === false || $id === null) {
-            header('Location: /?sucesso=0');
-            exit();
+            $this->addErrorMessage('ID inválido');
+            return new Response(302, [
+                'Location' => '/edit-video'
+            ]);
         }
 
-        $url = filter_input(INPUT_POST, 'url', FILTER_VALIDATE_URL);
-        $title = filter_input(INPUT_POST, 'titulo');
+        $url = filter_var($queryParams['url'], FILTER_VALIDATE_URL);
+        $title = filter_var($queryParams['titulo']);
 
         if ($url === false || $title === false) {
-            header('Location: /?sucesso=0');
-            exit();
+            $this->addErrorMessage('URL ou Título inválidos.');
+            return new Response(302, [
+                'Location' => '/edit-video'
+            ]);
         }
 
         $video = new Video($url, $title);
@@ -49,9 +59,14 @@ class EditVideoController implements Controller
         $success = $this->videoRepository->update($video);
 
         if ($success === false) {
-            header('Location: /?sucesso=0');
+            $this->addErrorMessage('Erro ao atualizar vídeo');
+            return new Response(302, [
+                'Location' => '/edit-video'
+            ]);
         } else {
-            header('Location: /?sucesso=1');
+            return new Response(302,[
+                'Location' => '/'
+            ]);
         }
     }
 }

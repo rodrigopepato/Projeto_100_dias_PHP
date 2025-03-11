@@ -4,7 +4,10 @@ namespace Alura\Mvc\Controller;
 
 use Alura\Mvc\Helper\FlashMessageTrait;
 use Alura\Mvc\Repository\UserRepository;
+use Nyholm\Psr7\Response;
 use PDO;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class LoginUserController implements Controller
 {
@@ -14,23 +17,26 @@ class LoginUserController implements Controller
     {
     }
 
-    public function processaRequisicao(): void
+    public function processaRequisicao(ServerRequestInterface $request): ResponseInterface
     {
-        $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
-        $password = filter_input(INPUT_POST, 'password');
+        $queryParams = $request->getQueryParams();
+        $email = filter_var($queryParams['email'], FILTER_VALIDATE_EMAIL);
+        $password = filter_var($queryParams['password']);
 
         if (!$email || !$password) {
-            $_SESSION['error_message'] = 'Usuário ou senha inválidos';
-            header('Location: /login');
-            exit();
+            $this->addErrorMessage('Usuário ou senha inválidos');
+            return new Response(302, [
+                'Location' => '/login'
+            ]);
         }
 
         $user = $this->userRepository->findByEmail($email);
 
         if (!$user) {
-            $_SESSION['error_message'] = 'Usuário ou senha inválidos';
-            header('Location: /login');
-            exit();
+            $this->addErrorMessage('Usuário ou senha inválidos');
+            return new Response(302, [
+                'Location' => '/login'
+            ]);
         }
 
         if (password_verify($password, $user->password())) {
@@ -39,11 +45,14 @@ class LoginUserController implements Controller
             }
 
             $_SESSION['logado'] = true;
-            header('Location: /');
+            return new Response(302, [
+                'Location' => '/'
+            ]);
         } else {
             $this->addErrorMessage('Usuário ou senha inválidos');
-            header('Location: /login');
-            exit();
+            return new Response(302, [
+                'Location' => '/'
+            ]);
         }
     }
 }
