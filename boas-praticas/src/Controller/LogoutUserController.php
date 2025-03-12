@@ -2,12 +2,17 @@
 
 namespace Alura\Mvc\Controller;
 
+use Nyholm\Psr7\Response;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+
 class LogoutUserController implements Controller
 {
-    public function processaRequisicao(): void
+    public function processaRequisicao(ServerRequestInterface $request): ResponseInterface
     {
-        $_SESSION['logado'] = false;
-        unset($_SESSION['logado']);
-        header('Location: /login');
+        session_destroy();
+        return new Response(302, [
+            'Location' => '/login'
+        ]);
     }
 }

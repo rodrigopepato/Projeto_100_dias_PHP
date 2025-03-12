@@ -19,9 +19,9 @@ class LoginUserController implements Controller
 
     public function processaRequisicao(ServerRequestInterface $request): ResponseInterface
     {
-        $queryParams = $request->getQueryParams();
-        $email = filter_var($queryParams['email'], FILTER_VALIDATE_EMAIL);
-        $password = filter_var($queryParams['password']);
+        $getParsedBody = $request->getParsedBody();
+        $email = filter_var($getParsedBody['email'], FILTER_VALIDATE_EMAIL);
+        $password = filter_var($getParsedBody['password']);
 
         if (!$email || !$password) {
             $this->addErrorMessage('Usuário ou senha inválidos');
