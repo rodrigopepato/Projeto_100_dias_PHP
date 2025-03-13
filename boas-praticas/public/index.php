@@ -1,12 +1,9 @@
 <?php
 
 use Alura\Mvc\Repository\{VideoRepository, UserRepository};
-use Alura\Mvc\Controller\{
-    Controller,
-    Error404Controller,
-    LoginUserController,
-    LoginFormController
-};
+use Alura\Mvc\Controller\Error404Controller;
+use Psr\Container\ContainerInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 session_start();
 
@@ -19,13 +16,9 @@ if (!isset($_SESSION['last_regeneration'])) {
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-$dbPath = __DIR__ . '/../banco.sqlite';
-$pdo = new PDO("sqlite:{$dbPath}");
-
-$videoRepository = new VideoRepository($pdo);
-$userRepository = new UserRepository($pdo);
-
 $routes = require_once __DIR__ . '/../config/routes.php';
+/** @var ContainerInterface $diContainer */
+$diContainer = require_once __DIR__ . '/../config/dependencies.php';
 
 $pathInfo = $_SERVER['PATH_INFO'] ?? '/';
 $httpMethod = $_SERVER['REQUEST_METHOD'];
@@ -46,11 +39,7 @@ $key = "$httpMethod|$pathInfo";
 if (array_key_exists($key, $routes)) {
     $controllerClass = $routes[$key];
 
-    if (in_array($controllerClass, [LoginUserController::class, LoginFormController::class])) {
-        $controller = new $controllerClass($userRepository);
-    } else {
-        $controller = new $controllerClass($videoRepository);
-    }
+    $controller = $diContainer->get($controllerClass);
 } else {
     $controller = new Error404Controller;
 }
@@ -66,8 +55,8 @@ $creator = new \Nyholm\Psr7Server\ServerRequestCreator(
 
 $request = $creator->fromGlobals();
 
-/** @var Controller $controller */
-$response = $controller->processaRequisicao($request);
+/** @var RequestHandlerInterface $controller */
+$response = $controller->handle($request);
 
 http_response_code($response->getStatusCode());
 foreach ($response->getHeaders() as $name => $values) {

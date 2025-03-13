@@ -7,8 +7,9 @@ use Alura\Mvc\Helper\HtmlRenderTrait;
 use Psr\Http\Message\ResponseInterface;
 use Alura\Mvc\Repository\VideoRepository;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
-class VideoFormController implements Controller
+class VideoFormController implements RequestHandlerInterface
 {
     use HtmlRenderTrait;
 
@@ -16,10 +17,13 @@ class VideoFormController implements Controller
     {
     }
 
-    public function processaRequisicao(ServerRequestInterface $request): ResponseInterface
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $queryParams = $request->getQueryParams();
-        $id = filter_var($queryParams['id'], FILTER_VALIDATE_INT);
+        $parsedBody = $request->getParsedBody();
+
+        $id = filter_var($queryParams['id'] ?? $parsedBody['id'] ?? null, FILTER_VALIDATE_INT);
+
         /**@var ?Video $video */
         $video = null;
         if ($id !== false && $id !== null) {
@@ -28,4 +32,5 @@ class VideoFormController implements Controller
 
         return new Response(200, body: $this->renderTemplate('video-form', ['video' => $video]));
     }
+
 }

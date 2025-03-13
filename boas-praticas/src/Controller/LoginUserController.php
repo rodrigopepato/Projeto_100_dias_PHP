@@ -8,8 +8,9 @@ use Nyholm\Psr7\Response;
 use PDO;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
-class LoginUserController implements Controller
+class LoginUserController implements RequestHandlerInterface
 {
     use FlashMessageTrait;
 
@@ -17,7 +18,7 @@ class LoginUserController implements Controller
     {
     }
 
-    public function processaRequisicao(ServerRequestInterface $request): ResponseInterface
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $getParsedBody = $request->getParsedBody();
         $email = filter_var($getParsedBody['email'], FILTER_VALIDATE_EMAIL);
