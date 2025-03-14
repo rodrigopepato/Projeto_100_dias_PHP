@@ -24,6 +24,7 @@ class ComposerStaticInit9df05d6f17465c8b9edb5e8c6ef4c7f7
         ),
         'L' => 
         array (
+            'League\\Plates\\' => 14,
             'Laravel\\SerializableClosure\\' => 28,
         ),
         'I' => 
@@ -61,6 +62,10 @@ class ComposerStaticInit9df05d6f17465c8b9edb5e8c6ef4c7f7
         'Nyholm\\Psr7Server\\' => 
         array (
             0 => __DIR__ . '/..' . '/nyholm/psr7-server/src',
+        ),
+        'League\\Plates\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/league/plates/src',
         ),
         'Laravel\\SerializableClosure\\' => 
         array (

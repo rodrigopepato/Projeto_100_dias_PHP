@@ -3,17 +3,18 @@
 namespace Alura\Mvc\Controller;
 
 use Nyholm\Psr7\Response;
-use Alura\Mvc\Helper\HtmlRenderTrait;
 use Psr\Http\Message\ResponseInterface;
 use Alura\Mvc\Repository\VideoRepository;
+use League\Plates\Engine;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 class VideoFormController implements RequestHandlerInterface
 {
-    use HtmlRenderTrait;
-
-    public function __construct(private VideoRepository $repository)
+    public function __construct(
+        private VideoRepository $repository,
+        private Engine $templates
+        )
     {
     }
 
@@ -30,7 +31,7 @@ class VideoFormController implements RequestHandlerInterface
             $video = $this->repository->find($id);
         }
 
-        return new Response(200, body: $this->renderTemplate('video-form', ['video' => $video]));
+        return new Response(200, body: $this->templates->render('video-form', ['video' => $video]));
     }
 
 }

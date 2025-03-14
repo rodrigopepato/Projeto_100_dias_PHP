@@ -1,8 +1,7 @@
 <?php
-
+$this->layout('layout');
 use Alura\Mvc\Entity\Video;
 
-    require_once __DIR__ . '/inicio-html.php';
     /** @var Video[] $videoList */
 ?>
 
@@ -31,5 +30,3 @@ use Alura\Mvc\Entity\Video;
         </li>
     <?php endforeach; ?>
 </ul>
-
-<?php require_once __DIR__ . '/fim-html.php';
