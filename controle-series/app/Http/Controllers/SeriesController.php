@@ -14,6 +14,6 @@ class SeriesController
         'Xogum',
         ];
 
-        return view('listar-series', compact('series'));
+        return view('series.index')->with('series', $series);
     }
 }
