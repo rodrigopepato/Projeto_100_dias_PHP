@@ -2,23 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Contracts\View\View;
+use App\Models\Serie;
 use Illuminate\Http\Request;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
+
 
 class SeriesController
 {
-    public function index(Request $request): View {
+    public function index(): View {
 
-        $series = [
-        'Lost',
-        'Peaky BLinders',
-        'Xogum',
-        ];
+        $series = Serie::query()->orderBy('nome')->get();
 
         return view('series.index')->with('series', $series);
     }
 
-    public function create(Request $request): View {
+    public function create(): View {
         return view('series.create');
+    }
+
+    public function store(Request $request): RedirectResponse
+    {
+        $nomeSerie = $request->input('nome');
+        $serie = new Serie();
+        $serie->nome = $nomeSerie;
+        $serie->save();
+
+        return redirect('/series');
     }
 }
