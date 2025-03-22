@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SeriesFormRequest;
 use App\Models\Serie;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\View\View;
@@ -23,19 +24,33 @@ class SeriesController
         return view('series.create');
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(SeriesFormRequest $request): RedirectResponse
     {
         $serie = Serie::create($request->all());
-        $request->session()->flash('mensagem.sucesso', "Série '{$serie->nome}' adicionada com sucesso");
 
-        return to_route('series.store');
+        return to_route('series.store')
+            ->with('mensagem.sucesso', "Série '{$serie->nome}' adicionada com sucesso");
     }
 
-    public function destroy(Serie $series, Request $request): RedirectResponse
+    public function destroy(Serie $series): RedirectResponse
     {
         $series->delete();
-        $request->session()->flash('mensagem.sucesso', "A série '{$series->nome}' foi removida com sucesso.");
 
-        return to_route('series.index');
+        return to_route('series.index')
+            ->with('mensagem.sucesso', "A série '{$series->nome}' foi removida com sucesso.");
+    }
+
+    public function edit(Serie $series)
+    {
+        return view('series.edit')->with('serie', $series);
+    }
+
+    public function update(Serie $series, SeriesFormRequest $request): RedirectResponse
+    {
+        $series->fill($request->all());
+        $series->save();
+
+        return to_route('series.index')
+            ->with('mensagem.sucesso', "Série '{$series->nome}' editada com sucesso");
     }
 }
