@@ -10,10 +10,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Season extends Model
 {
     use HasFactory;
+    protected $fillable = ['number'];
 
     public function series(): BelongsTo
     {
-        return $this->belongsTo(Serie::class);
+        return $this->belongsTo(Series::class);
     }
 
     public function episodes(): HasMany
