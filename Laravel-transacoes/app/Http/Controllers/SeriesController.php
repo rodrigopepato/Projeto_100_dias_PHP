@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 
-
 class SeriesController extends Controller
 {
 
@@ -17,8 +16,8 @@ class SeriesController extends Controller
     {
     }
 
-    public function index(Request $request): View {
-
+    public function index(Request $request): View
+    {
         $series = Series::all();
         $mensagemSucesso = $request->session()->get('mensagem.sucesso');
 
