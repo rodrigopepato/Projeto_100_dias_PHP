@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
@@ -33,6 +32,8 @@ class SeriesCreated extends Mailable
      */
     public function build()
     {
-        return $this->markdown('mail.series-created');
+        return $this->subject("Série {$this->nomeSerie} criada")
+                    ->markdown('mail.series-created');
     }
+
 }

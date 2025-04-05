@@ -1,5 +1,6 @@
 <?php
 
+use App\Mail\SeriesCreated;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,15 +15,15 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('series.index');
 });
 
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
-Route::get('/email', function () {
-    return new \App\Mail\SeriesCreated(
+Route::get('/email', function() {
+    return new SeriesCreated(
         'Série de teste',
         19,
         5,
